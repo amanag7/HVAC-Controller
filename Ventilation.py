@@ -27,10 +27,10 @@ client.subscribe('location/Controller') #subscribe to this channel
 print(client_name)
 
 client.loop_start()
-time.sleep(2)
+time.sleep(1)
 
 end_time=time.time() + 300
 while time.time() < end_time:
-    time.sleep(2)   
+    time.sleep(1)   
 
 print("exiting")

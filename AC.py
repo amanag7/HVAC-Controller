@@ -27,10 +27,10 @@ client.subscribe('location/Controller') #subscribe to the controller
 print(client_name)
 
 client.loop_start()
-time.sleep(5)
+time.sleep(1)
 
 end_time=time.time() + 300
 while time.time() < end_time:
-    time.sleep(5)   
+    time.sleep(1)   
     
 print("exiting")

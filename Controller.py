@@ -7,6 +7,7 @@ ambient_temprature = 21
 ac = 21
 heating = 4
 ventilation = 2
+to_be_sent=""
 
 def on_connect(client, userdata, flags, rc):
 	if rc == 0:
@@ -61,6 +62,7 @@ def on_message(client, userdata, message):
     to_be_disp = "Received Temperature from Sensor: " + str(received_temp) + "  " + "AC: " + str(ac) + "  "+ "Heating: "+ str(heating) + "  " + "Ventilation: " + str(ventilation)
     to_be_sent = str(ac) + " " + str(heating) + " " + str(ventilation) + " " + str(received_temp)
     print(to_be_disp)
+    print("Ambient Temp:",ambient_temprature)
     print('\n')
 
 #function for taking the value of ambient temperature, if user want to change the ambient temperature

@@ -11,7 +11,7 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, message):
 	heating_temp = int(message.payload.split()[1])
-	print("Received Temperature from Sensor: " + str(heating_temp))
+	print("Heating Level: " + str(heating_temp))
 	
 client_name = "Heating" #client name
 broker_address = "127.0.0.1"  # Broker address
@@ -27,10 +27,10 @@ client.subscribe('location/Controller') #subscribe to the controller
 print(client_name)
 
 client.loop_start()
-time.sleep(5)
+time.sleep(1)
 
 end_time=time.time() + 300
 while time.time() < end_time:
-    time.sleep(5)   
+    time.sleep(1)   
 
 print("exiting")
