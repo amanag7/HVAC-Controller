@@ -18,7 +18,7 @@ received_temp = 30
 
 headings=("Heating Level","Ventilation Level","AC temperature")
 data = list((heating,ventilation,ac))
-ambient_temp = 24   #default
+ambient_temp = 21   #default
 		
 def on_message(client, userdata, message):
     global ac, ventilation, heating, received_temp,data
