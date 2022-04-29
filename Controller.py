@@ -3,31 +3,30 @@ import time
 import math
 
 #default values for ac,ventilation,heating,ambient temperature
-ambient_temprature = 21
+ambient_temperature = 21
 ac = 21
 heating = 4
 ventilation = 2
 to_be_sent=""
 
 def on_connect(client, userdata, flags, rc):
-	if rc == 0:
-		print("Connected to broker")
-		print('\n')
-	else:
-		print("Connection failed Return Code : ",rc)
-
+    if rc == 0:
+        print("Connected to broker")
+        print('\n')
+    else:
+        print("Connection failed Return Code : ",rc)
 
 def on_message(client, userdata, message):
-    global to_be_sent, heating, ac, ventilation, received_temp, ambient_temprature
+    global to_be_sent, heating, ac, ventilation, received_temp, ambient_temperature
  
     received_temp = int(message.payload)
     print("Received Temperature from Sensor: " + str(received_temp))
 
     #computing the difference between the current ambient temperature and received room temperature
-    diff = abs(received_temp - ambient_temprature)
+    diff = abs(received_temp - ambient_temperature)
 
     #Handling the case when reveived temp from the sensor is less than ambient temperature
-    if received_temp < ambient_temprature:
+    if received_temp < ambient_temperature:
         ac += math.ceil(diff/8)
         heating += math.ceil(diff/10)
         #loops for controlling the overflow of range
@@ -43,7 +42,7 @@ def on_message(client, userdata, message):
             ventilation = 2
 
     #Handling the case when reveived temp from the sensor is greater than ambient temperature
-    elif received_temp > ambient_temprature:
+    elif received_temp > ambient_temperature:
         ac -=  math.ceil(diff/8)
         heating -= math.ceil(diff/10)
         #loops for controlling the overflow of range
@@ -62,56 +61,59 @@ def on_message(client, userdata, message):
     to_be_disp = "Received Temperature from Sensor: " + str(received_temp) + "  " + "AC: " + str(ac) + "  "+ "Heating: "+ str(heating) + "  " + "Ventilation: " + str(ventilation)
     to_be_sent = str(ac) + " " + str(heating) + " " + str(ventilation) + " " + str(received_temp)
     print(to_be_disp)
-    print("Ambient Temp:",ambient_temprature)
+    print("Ambient Temp:",ambient_temperature)
     print('\n')
 
 #function for taking the value of ambient temperature, if user want to change the ambient temperature
 def temperature_to_set(client, userdata, message):
-	global ambient_temprature, to_be_sent, heating, ac, ventilation, received_temp
-	ambient_temprature = int(message.payload)
-	print("Received temp: " + str(received_temp) )
-	
-	#computing the difference between the current ambient temperature and received room temperature
-	diff = abs(received_temp - ambient_temprature)
+    global ambient_temperature, to_be_sent, heating, ac, ventilation, received_temp
+    ambient_temperature = int(message.payload)
+    print("Received Temperature from Sensor: " + str(received_temp))
 
-	#if the received temperature is equal to the ambient temperature, then do nothing
-	if received_temp == ambient_temprature:
-		pass
+    #computing the difference between the current ambient temperature and received room temperature
+    diff = abs(received_temp - ambient_temperature)
 
-	#Handling the case when reveived temp from the sensor is less than ambient temperature
-	elif received_temp < ambient_temprature:
-		ac = ac +  (int)(math.ceil(diff/8))
-		heating = heating + (int)(math.ceil(diff/10))
-		#loops for controlling the overflow of range
-		if(heating >10):
-			heating = 9
-		if(ventilation > 10):
-			ventilation = 9
-		if ac < 16:
-			ac = 17
-		if diff > 5:
-			ventilation = 3
-		else:
-			ventilation = 2
+    #if the received temperature is equal to the ambient temperature, then do nothing
+    if received_temp == ambient_temperature:
+        pass
 
-	#Handling the case when reveived temp from the sensor is greater than ambient temperature
-	elif received_temp > ambient_temprature:
-		ac = ac - (int)(math.ceil(diff/8))
-		#loops for controlling the overflow of range
-		heating = heating - (int)(math.ceil(diff/10))
-		if(heating < 0):
-			heating = 1
-		if diff > 5:
-			ventilation = 1
-		if ac > 24:
-			ac = 24
-		else:
-			ventilation = 2
+    #Handling the case when reveived temp from the sensor is less than ambient temperature
+    elif received_temp < ambient_temperature:
+        ac += math.ceil(diff/8)
+        heating += math.ceil(diff/10)
+        #loops for controlling the overflow of range
+        if heating >= 5:
+            heating = 4
+        if ventilation >= 5:
+            ventilation = 4
+        if ac > 24:
+            ac = 24
+        if diff > 5:
+            ventilation = 3
+        else:
+            ventilation = 2
 
-	#to_be_sent : message containing ac, heating, ventilation, and received temperature
-	to_be_sent = str(ac) + " " + str(heating) + " " + str(ventilation) + " " + str(received_temp)
-	print(to_be_sent)
-	
+    #Handling the case when reveived temp from the sensor is greater than ambient temperature
+    elif received_temp > ambient_temperature:
+        ac -=  math.ceil(diff/8)
+        heating -= math.ceil(diff/10)
+        #loops for controlling the overflow of range
+        if heating < 0:
+            heating = 1
+        if ac < 16:
+            ac = 17
+        if diff > 5:
+            ventilation = 1
+        else:
+            ventilation = 2
+
+    #to_be_sent : message containing ac, heating, ventilation, and received temperature
+    to_be_disp = "Received Temperature from Sensor: " + str(received_temp) + "  " + "AC: " + str(ac) + "  "+ "Heating: "+ str(heating) + "  " + "Ventilation: " + str(ventilation)
+    to_be_sent = str(ac) + " " + str(heating) + " " + str(ventilation) + " " + str(received_temp)
+    print(to_be_disp)
+    print("Ambient Temp:",ambient_temperature)
+    print('\n')
+
 client_name = "Controller" #client name
 broker_address = "127.0.0.1"  # Broker address
 broker_port = 1883  # Broker port
@@ -137,7 +139,7 @@ f =  open("output.txt", "w") #output.txt will save the log files
 end_time=time.time() + 300
 while time.time() < end_time:
     client.publish('location/' + client_name, to_be_sent)
-    f.write("Received Temperature from Sensor: " + str(received_temp) + "  " + "AC: " + str(ac) + "  "+ "Heating: "+ str(heating) + "  " + "Ventilation: " + str(ventilation) + "\n")
+    f.write("Received Temperature from Sensor: " + str(received_temp) + "  " + "Ambient Temperature:  " + str(ambient_temperature) + "  " + "AC: " + str(ac) + "  "+ "Heating: " + str(heating) + "  " + "Ventilation: " + str(ventilation) +"\n")
     time.sleep(5)   
 
 f.close()
