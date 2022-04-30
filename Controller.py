@@ -4,9 +4,9 @@ import math
 
 #default values for ac,ventilation,heating,ambient temperature
 ambient_temperature = 21
-ac = 21
-heating = 0
-ventilation = 0
+ac = 21		# AC temperatures (16-26)
+heating = 0		# Heater levels (0-4)
+ventilation = 0	# Ventilation levels (0-3)	
 to_be_sent=""
 
 def on_connect(client, userdata, flags, rc):
