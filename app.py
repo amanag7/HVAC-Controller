@@ -11,9 +11,9 @@ def on_connect(client,userdata, flags, rc):
 	else:
 		print("Connection failed Return Code : ",rc)
 
-heating = 1
-ac = 20
-ventilation = 2
+heating = 0
+ac = 21
+ventilation = 0
 received_temp = 30
 
 headings=("Heating Level","Ventilation Level","AC temperature")
