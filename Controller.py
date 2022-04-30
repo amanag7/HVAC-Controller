@@ -5,8 +5,8 @@ import math
 #default values for ac,ventilation,heating,ambient temperature
 ambient_temperature = 21
 ac = 21
-heating = 4
-ventilation = 2
+heating = 0
+ventilation = 0
 to_be_sent=""
 
 def on_connect(client, userdata, flags, rc):
@@ -28,34 +28,42 @@ def on_message(client, userdata, message):
     #Handling the case when reveived temp from the sensor is less than ambient temperature
     if received_temp < ambient_temperature:
         ac += math.ceil(diff/8)
-        heating += math.ceil(diff/10)
+        heating += math.ceil(diff/5)
         #loops for controlling the overflow of range
         if heating >= 5:
             heating = 4
-        if ventilation >= 5:
-            ventilation = 4
-        if ac > 24:
-            ac = 24
-        if diff > 5:
+        if ac > 26:
+            ac = 26
+        if diff >= 1 and diff < 5:
             ventilation = 3
-        else:
+        elif diff >=5 and diff < 8:
             ventilation = 2
-
+        elif diff >=8 and diff < 12:
+            ventilation = 1
+        else:
+            ventilation = 0
+           
     #Handling the case when reveived temp from the sensor is greater than ambient temperature
     elif received_temp > ambient_temperature:
         ac -=  math.ceil(diff/8)
-        heating -= math.ceil(diff/10)
-        #loops for controlling the overflow of range
+        heating -= math.ceil(diff/5)
+        #loops for controlling the underflow of range
         if heating < 0:
             heating = 1
         if ac < 16:
-            ac = 17
-        if diff > 5:
+            ac = 16
+        if diff >= 1 and diff < 5:
+            ventilation = 3
+        elif diff >=5 and diff < 8:
+            ventilation = 2
+        elif diff >=8 and diff < 12:
             ventilation = 1
         else:
-            ventilation = 2
+            ventilation = 0
     else:
-        pass
+        ac = 21 # default value for AC
+        heating = 0 # heater switched off
+        ventilation = 0 # ventilation switched off
 
     #to_be_sent : message containing ac, heating, ventilation, and received temperature
     to_be_disp = "Received Temperature from Sensor: " + str(received_temp) + "  " + "AC: " + str(ac) + "  "+ "Heating: "+ str(heating) + "  " + "Ventilation: " + str(ventilation)
@@ -75,37 +83,45 @@ def temperature_to_set(client, userdata, message):
 
     #if the received temperature is equal to the ambient temperature, then do nothing
     if received_temp == ambient_temperature:
-        pass
+        ac = 21 # default value for AC
+        heating = 0 # heater switched off
+        ventilation = 0 # ventilation switched off
 
     #Handling the case when reveived temp from the sensor is less than ambient temperature
     elif received_temp < ambient_temperature:
         ac += math.ceil(diff/8)
-        heating += math.ceil(diff/10)
+        heating += math.ceil(diff/5)
         #loops for controlling the overflow of range
         if heating >= 5:
             heating = 4
-        if ventilation >= 5:
-            ventilation = 4
-        if ac > 24:
-            ac = 24
-        if diff > 5:
+        if ac > 26:
+            ac = 26
+        if diff >= 1 and diff < 5:
             ventilation = 3
-        else:
+        elif diff >=5 and diff < 8:
             ventilation = 2
+        elif diff >=8 and diff < 12:
+            ventilation = 1
+        else:
+            ventilation = 0
 
     #Handling the case when reveived temp from the sensor is greater than ambient temperature
     elif received_temp > ambient_temperature:
         ac -=  math.ceil(diff/8)
-        heating -= math.ceil(diff/10)
-        #loops for controlling the overflow of range
+        heating -= math.ceil(diff/5)
+        #loops for controlling the underflow of range
         if heating < 0:
             heating = 1
         if ac < 16:
-            ac = 17
-        if diff > 5:
+            ac = 16
+        if diff >= 1 and diff < 5:
+            ventilation = 3
+        elif diff >=5 and diff < 8:
+            ventilation = 2
+        elif diff >=8 and diff < 12:
             ventilation = 1
         else:
-            ventilation = 2
+            ventilation = 0
 
     #to_be_sent : message containing ac, heating, ventilation, and received temperature
     to_be_disp = "Received Temperature from Sensor: " + str(received_temp) + "  " + "AC: " + str(ac) + "  "+ "Heating: "+ str(heating) + "  " + "Ventilation: " + str(ventilation)
