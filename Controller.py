@@ -30,7 +30,7 @@ def on_message(client, userdata, message):
         ac += math.ceil(diff/8)
         heating += math.ceil(diff/5)
         #loops for controlling the overflow of range
-        if heating >= 5:
+        if heating > 4:
             heating = 4
         if ac > 26:
             ac = 26
@@ -49,7 +49,7 @@ def on_message(client, userdata, message):
         heating -= math.ceil(diff/5)
         #loops for controlling the underflow of range
         if heating < 0:
-            heating = 1
+            heating = 0
         if ac < 16:
             ac = 16
         if diff >= 1 and diff < 5:
