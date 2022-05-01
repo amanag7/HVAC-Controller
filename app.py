@@ -26,7 +26,7 @@ def on_message(client, userdata, message):
     heating = int(message.payload.split()[1])
     ventilation = int(message.payload.split()[2])
     received_temp = int(message.payload.split()[3])
-    data = list((heating,ventilation,ac))
+    data = list((received_temp,heating,ventilation,ac))
     print("Received Temperature from Sensor: " + str(received_temp) + "  " + "AC: " + str(ac) + "  "+ "Heating: "+ str(heating) + "  " + "Ventilation: " + str(ventilation) + "\n")
 
 client_name = "user-display"
