@@ -28,7 +28,7 @@
         <a href="{{ url_for('index') }}"><input type="button" value="Refresh" id="refresh_btn"></a><br>
 
         <p><h3 id="form_text">Set ambient temperature</h3></p>
-        <input type="number" name="temperature_ip" class="temp_input" value="{{ ambient_temp }}">
+        <input type="number" name="temperature_ip" class="temp_input" value="{{ ambient_temp }}" min="18" max="24">
         <input type="submit" value="Set" id="submit_btn"><br>
 
     </form>

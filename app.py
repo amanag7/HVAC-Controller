@@ -16,8 +16,8 @@ ac = 21
 ventilation = 0
 received_temp = 30
 
-headings=("Heating Level","Ventilation Level","AC temperature")
-data = list((heating,ventilation,ac))
+headings=("Room Temperature","Heating Level","Ventilation Level","AC temperature")
+data = list((received_temp,heating,ventilation,ac))
 ambient_temp = 21   #default
 		
 def on_message(client, userdata, message):
@@ -39,7 +39,7 @@ client = mqttClient.Client(client_name)
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect(host = broker_address, port = broker_port)
-client.subscribe('location/Controller')
+client.subscribe('temperature/Controller')
 
 print(client_name)
 client.loop_start()
@@ -54,7 +54,7 @@ def index():
     global ambient_temp
     if request.method == "POST":
         ambient_temp = request.form['temperature_ip']
-        client.publish('location/' + client_name, ambient_temp)
+        client.publish('temperature/' + client_name, ambient_temp)
         flash(str(ambient_temp))
     return render_template("index.html",headings=headings,data=data,ambient_temp=ambient_temp)
 app.add_url_rule("/",view_func=index,methods=["POST","GET"])

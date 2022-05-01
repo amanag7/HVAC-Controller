@@ -139,10 +139,10 @@ password = "hivemq"
 client = mqttClient.Client(client_name)  # create new instance
 client.on_connect = on_connect  # attach function to callback
 client.on_message = on_message
-client.message_callback_add('location/user-display',temperature_to_set)
+client.message_callback_add('temperature/user-display',temperature_to_set)
 client.connect(host=broker_address, port=broker_port)
-client.subscribe('location/Room_temp_sensor') #channel for receiving the temperature from temperature sensor
-client.subscribe('location/user-display') #channel for receiving temperature from the user
+client.subscribe('temperature/Room_temp_sensor') #channel for receiving the temperature from temperature sensor
+client.subscribe('temperature/user-display') #channel for receiving temperature from the user
 print(client_name)
 
 client.loop_start()
@@ -154,7 +154,7 @@ f =  open("output.txt", "w") #output.txt will save the log files
 #assuming every request will come after 10sec from the previous transaction
 end_time=time.time() + 300
 while time.time() < end_time:
-    client.publish('location/' + client_name, to_be_sent)
+    client.publish('temperature/' + client_name, to_be_sent)
     f.write("Received Temperature from Sensor: " + str(received_temp) + "  " + "Ambient Temperature:  " + str(ambient_temperature) + "  " + "AC: " + str(ac) + "  "+ "Heating: " + str(heating) + "  " + "Ventilation: " + str(ventilation) +"\n")
     time.sleep(5)   
 

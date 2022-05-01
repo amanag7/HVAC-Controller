@@ -32,7 +32,7 @@ while time.time() < end_time:
 	#randomly generating temperature between 10 and 40 and sending to the controller
 	rand_temp = random.randrange(10,40)
 	print(" Room Temperature:",rand_temp)
-	client.publish('location/' + client_name, str(rand_temp))
+	client.publish('temperature/' + client_name, str(rand_temp))
     	#sending room temperature every 30 second
 	time.sleep(30)
 

@@ -23,7 +23,7 @@ client = mqttClient.Client(client_name)  # create new instance
 client.on_connect = on_connect  # attach function to callback
 client.on_message = on_message
 client.connect(host=broker_address, port=broker_port)
-client.subscribe('location/Controller') #subscribe to the controller
+client.subscribe('temperature/Controller') #subscribe to the controller
 print(client_name)
 
 client.loop_start()
