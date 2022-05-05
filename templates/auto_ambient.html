@@ -34,37 +34,40 @@
                 {% endfor %}
             </tr>
         </table>
-        <a href="{{ url_for('index') }}"><input type="button" value="Refresh" id="refresh_btn"></a><br>
+        <a href="{{ url_for('auto_ambient') }}"><input type="button" value="Refresh" id="refresh_btn"></a><br>
     </div>
 
-    <form action="" method="post">
 
+    <form action="{{ url_for('auto_ambient') }}" method="post">
+        
         <div class="ventilation_ip">
-            <label for="ventilation"><h3 id="form_text">Set Ventilation Level</h3></label>
+            <label for="state"><h3 id="form_text">Select State</h3></label>
 
-            <select name="ventil_ip" id="ventil_level">
-                <option value="select_pls" selected hidden>Select level</option>
-                <option value="auto">Auto</option>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2" >2</option>
-                <option value="3">3</option>
+            <select name="state_ip" id="state_ip">
+                <option value="select_pls" selected hidden disabled>Select state</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Chhattisgarh" >Chhattisgarh</option>
+                <option value="Uttar_Pradesh">Uttar Pradesh</option>
             </select>
         </div>
-        
-        <div class="ambient_temp_ip">
+
+        <!-- <div class="ambient_temp_ip">
             <p><h3 id="form_text">Set ambient temperature</h3></p>
             <input type="number" name="temperature_ip" class="temp_input" value="{{ ambient_temp }}" min="18" max="24">
-            <a href="{{ url_for('auto_ambient') }}"><input type="button" id="submit_btn" value="Auto set"></a>
+            <a href="\auto-ambient"><input type="button" id="submit_btn" value="Auto set"></a>
             <br>
-        </div>
-        <input type="submit" value="Set" id="submit_btn"><br>
+        </div> -->    
+        <input type="submit" value="Confirm" id="submit_btn">
+        <a href="{{ url_for('index') }}"><input type="button" value="Back" id="refresh_btn"></a>
+        <br>
 
     </form>
-    <!-- <div class="temp_op">
-    {% for message in get_flashed_messages() %}
-        <p>Current Ambient Temperature: {{message}}</p>
-    {% endfor %}
-    </div> -->
+    <div class="temp_op">
+        {% for message in get_flashed_messages() %}
+            <p>Current Selected state: {{message}}</p>
+        {% endfor %}
+    </div>
 </body>
 </html>

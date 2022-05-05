@@ -45,6 +45,15 @@ td {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+.ambient_temp_ip {
+    border: 2px #eceff2;
+}
+
+.ventilation_ip {
+    border: 2px #eceff2;
+}
+
+
 #form_text {
     color: #70b5e2;
     margin-top: 20px;

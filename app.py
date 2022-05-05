@@ -15,10 +15,12 @@ heating = 0
 ac = 21
 ventilation = 0
 received_temp = 30
-
-headings=("Room Temperature","Heating Level","Ventilation Level","AC temperature")
-data = list((received_temp,heating,ventilation,ac))
 ambient_temp = 21   #default
+
+heads1 = ("Room Temperature","Ambient temperature")
+heads2=("Heating Level","Ventilation Level","AC temperature")
+data1 = list((received_temp,ambient_temp))
+data2 = list((heating,ventilation,ac))
 		
 def on_message(client, userdata, message):
     global ac, ventilation, heating, received_temp,data
@@ -44,20 +46,42 @@ client.subscribe('temperature/Controller')
 print(client_name)
 client.loop_start()
 
+
+
 app = Flask(__name__)
 app.secret_key = "iot_project"
 
 
-
-
 def index():
-    global ambient_temp
+    global ambient_temp,data1, data2,ventilation
+    prev_ventil = ventilation
+
     if request.method == "POST":
-        ambient_temp = request.form['temperature_ip']
+        ambient_temp = request.form.get('temperature_ip')
+        ventilation = request.form.get('ventil_ip')
+        if ventilation=="select_pls":
+            ventilation=prev_ventil
+        elif ventilation!="auto" and ventilation!="select_pls":
+            ventilation = int(ventilation)
+            client.publish('humidity/'+ client_name, ventilation)
+        else: pass
+
+        data1 = list((received_temp,ambient_temp))
+        data2 = list((heating,ventilation,ac))
+
         client.publish('temperature/' + client_name, ambient_temp)
-        flash(str(ambient_temp))
-    return render_template("index.html",headings=headings,data=data,ambient_temp=ambient_temp)
+
+    return render_template("index.html",heads1=heads1,data1=data1,heads2=heads2,data2=data2,ambient_temp=ambient_temp)
+
 app.add_url_rule("/",view_func=index,methods=["POST","GET"])
+
+def auto_ambient():
+    if request.method == "POST":
+        state = request.form.get('state_ip')
+        flash(str(state))
+    return render_template("auto_ambient.html",heads1=heads1,data1=data1,heads2=heads2,data2=data2)
+app.add_url_rule("/auto_ambient",view_func=auto_ambient,methods=["POST","GET"])
+
 
 if __name__ == "__main__":
     app.run()
