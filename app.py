@@ -23,12 +23,13 @@ data1 = list((received_temp,ambient_temp))
 data2 = list((heating,ventilation,ac))
 		
 def on_message(client, userdata, message):
-    global ac, ventilation, heating, received_temp,data
+    global ac, ventilation, heating, received_temp, data1, data2
     ac = int(message.payload.split()[0])
     heating = int(message.payload.split()[1])
     ventilation = int(message.payload.split()[2])
     received_temp = int(message.payload.split()[3])
-    data = list((received_temp,heating,ventilation,ac))
+    data1 = list((received_temp,ambient_temp))
+    data2 = list((heating,ventilation,ac))
     print("Received Temperature from Sensor: " + str(received_temp) + "  " + "AC: " + str(ac) + "  "+ "Heating: "+ str(heating) + "  " + "Ventilation: " + str(ventilation) + "\n")
 
 client_name = "user-display"
