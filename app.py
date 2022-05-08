@@ -15,20 +15,22 @@ heating = 0
 ac = 21
 ventilation = 0
 received_temp = 30
+received_humid = 40
 ambient_temp = 21   #default
 
-heads1 = ("Room Temperature","Ambient temperature")
+heads1 = ("Room Temperature","Humidity (%)","Ambient temperature")
 heads2=("Heating Level","Ventilation Level","AC temperature")
-data1 = list((received_temp,ambient_temp))
+data1 = list((received_temp,received_humid,ambient_temp))
 data2 = list((heating,ventilation,ac))
 		
 def on_message(client, userdata, message):
-    global ac, ventilation, heating, received_temp, data1, data2
+    global ac, ventilation, heating, received_temp, data1, data2, received_humid
     ac = int(message.payload.split()[0])
     heating = int(message.payload.split()[1])
     ventilation = int(message.payload.split()[2])
     received_temp = int(message.payload.split()[3])
-    data1 = list((received_temp,ambient_temp))
+    received_humid = int(message.payload.split()[4])
+    data1 = list((received_temp,received_humid,ambient_temp))
     data2 = list((heating,ventilation,ac))
     print("Received Temperature from Sensor: " + str(received_temp) + "  " + "AC: " + str(ac) + "  "+ "Heating: "+ str(heating) + "  " + "Ventilation: " + str(ventilation) + "\n")
 
@@ -65,9 +67,11 @@ def index():
         elif ventilation!="auto" and ventilation!="select_pls":
             ventilation = int(ventilation)
             client.publish('humidity/'+ client_name, ventilation)
-        else: pass
+        else:
+            flag = -1
+            client.publish('humidity/'+ client_name, flag)
 
-        data1 = list((received_temp,ambient_temp))
+        data1 = list((received_temp,received_humid,ambient_temp))
         data2 = list((heating,ventilation,ac))
 
         client.publish('temperature/' + client_name, ambient_temp)
